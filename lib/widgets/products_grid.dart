@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import '../providers/products_provider.dart';
 import '../widgets/product_item.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductsGrid extends StatelessWidget {
+
+  final bool showFav;
+  ProductsGrid(this.showFav);
 
   @override
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);
-    final products = productsData.items;
+    final products = showFav? productsData.favoriteItems:productsData.items;
     return GridView.builder(
       padding: const EdgeInsets.all(10.0),
       itemCount: products.length,
@@ -19,10 +23,13 @@ class ProductsGrid extends StatelessWidget {
         childAspectRatio: 0.9,
       ),
       itemBuilder: (context, index) {
-        return ProductItem(
-          id: products[index].id,
-          title: products[index].title,
-          imageUrl: products[index].imageUrl,
+        return ChangeNotifierProvider.value(
+          value: products[index],
+          child: ProductItem(
+            // id: products[index].id,
+            // title: products[index].title,
+            // imageUrl: products[index].imageUrl,
+          ),
         );
       },
     );
